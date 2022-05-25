@@ -1,0 +1,454 @@
+#:import Factory kivy.factory.Factory
+
+<Button>
+    background_normal: ''
+    background_down: 'images/pressed.png'
+    background_color: '#007306'
+    font_name: 'Georgia'
+
+<CityButton>
+    background_normal: ''
+    background_down: 'images/pressed.png'
+    background_color: '#00a110'
+    font_name: 'Georgia'
+
+<Popup>
+    background_color: '#ffffff'
+    background: 'images/white_background.png'
+    title_font: 'Georgia'
+
+<Label>
+    font_name: 'Georgia'
+
+<TextInput>
+    font_name: 'Georgia'
+
+<TabbedPanelItem>
+    background_normal: ''
+    background_down: 'images/pressed.png'
+    background_color: '#007306'
+    font_name: 'Georgia'
+
+<Spinner>
+    background_normal: ''
+    background_color: '#007306'
+    font_name: 'Georgia'
+
+<CityDisplayer>
+    size_hint: 1, None
+    height: 100
+
+    CityButton:
+        size_hint: 1, None
+        height: 100
+
+        BoxLayout:
+            size_hint: None, 1
+            width: self.parent.width
+            pos: self.parent.pos
+            orientation: 'horizontal'
+            spacing: 10
+            padding: 20
+
+            AsyncImage:
+                id: city_button_temp_image
+                size_hint: None, 1
+                width: self.height
+            Label:
+                size_hint: 0.1, 1
+                text: ''
+
+            Label:
+                id: city_button_name
+                size_hint: 0.2, 1
+                font_size: 28
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+                text: 'City'
+                bold: True
+            Label:
+                size_hint: 0.4, 1
+                text: ''
+            Label:
+                size_hint: 0.1, 1
+                font_size: 14
+                text: 'Current:'
+            Label:
+                id: city_button_temp_day
+                size_hint: 0.1, 1
+                width: self.height
+                font_size: 28
+                text: 'Temp_curr'
+            Label:
+                size_hint: 0.1, 1
+                font_size: 14
+                text: 'Night:'
+            Label:
+                id: city_button_temp_night
+                size_hint: 0.1, 1
+                width: self.height
+                font_size: 28
+                text: 'Temp_night'
+
+
+<CityListScreen>
+    name: 'City list'
+
+    BoxLayout:
+        cols: 1
+        rows: 3
+        size: root.width, root.height
+        orientation: 'vertical'
+        spacing: 10
+        padding: 10
+
+        canvas.before:
+            Color:
+                rgba:1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        # Top menu
+        BoxLayout:
+            rows: 1
+            size_hint: None, None
+            size: self.parent.width, 50
+            spacing: 10
+            orientation: 'horizontal'
+
+            Button:
+                size_hint: None, None
+                size: 50, 50
+
+                text: ''
+
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'Settings screen'
+
+                Image:
+                    size: 40, 40
+                    source: 'images/settings.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    stretch: True
+
+            Button:
+                id: city_list_refresh
+                size_hint: None, None
+                size: 50, 50
+
+                text: ''
+                on_press: root.refresh_city_layout()
+
+                Image:
+                    size: 40, 40
+                    source: 'images/refresh.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    stretch: True
+
+            Label:
+                size_hint: 0.35, 1
+                text: ''
+
+            Label:
+                id: city_list_date
+                size_hint: 0.25, 1
+                font_size: 24
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'right'
+                valign: 'middle'
+                text: 'Date'
+
+            Label:
+                size_hint: 0.015, 1
+                text: ''
+
+        # Main sector with city list
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            scroll_type: ['bars']
+            bar_width: 10
+
+            BoxLayout:
+                id: city_layout
+                cols: 1
+                size_hint: 1, None
+                height: self.minimum_height
+                spacing: '10'
+                orientation: 'vertical'
+
+        # Bottom toolbar
+        BoxLayout:
+            size_hint: None, None
+            size: self.parent.width, 50
+            orientation: 'horizontal'
+            spacing: 10
+
+            Label:
+                size_hint: None, 1
+                width: self.parent.width-200
+
+            Label:
+                size_hint: None, 1
+                width: 50
+
+                text: ''
+
+            Button:
+                size_hint: None, 1
+                width: 50
+
+                text: ''
+                on_press: root.show_city_popup()
+
+                Image:
+                    size: 40, 40
+                    source: 'images/add.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    stretch: True
+
+            ToggleButton:
+                size_hint: None, 1
+                width: 50
+                id: remove_city
+                on_press: root.remove_city()
+                on_press: root.change_rem_image()
+                #background_color: 0,0,0,0
+
+                Image:
+                    id: remove_city_image
+                    size: 40, 40
+                    source: 'images/remove_up.png'
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
+                    stretch: True
+
+#Settings screen
+<SettingsScreen>
+    name: 'Settings screen'
+
+    BoxLayout:
+        cols: 1
+        rows: 4
+        size: root.width, root.height
+        orientation: 'vertical'
+        spacing: 10
+        padding: 10
+
+        canvas.before:
+            Color:
+                rgba:1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 50
+            orientation: 'horizontal'
+
+            Label:
+                size_hint: 0.5, 1
+                font_size: 28
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'left'
+                valign: 'middle'
+                text: 'Settings'
+
+            Label:
+                size_hint: 0.45, 1
+                text: ''
+
+            Button:
+                size_hint: None, 1
+                width: 50
+                font_size: 24
+                text: '=>'
+                on_press:
+                    app.root.transition.direction = 'left'
+                    app.root.current = 'City list'
+
+        BoxLayout:
+            size_hint: 1, None
+            spacing: 10
+            padding: 20
+            height: 90
+            orientation: 'horizontal'
+
+            Label:
+                id: night_hour_label
+                size_hint: 0.5, 1
+                font_size: 16
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'left'
+                valign: 'middle'
+                text: 'Night hour: '
+
+            Spinner:
+                id: night_hour_spinner
+                font_size: 16
+                size_hint: 0.5, 1
+
+                values: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+
+        BoxLayout:
+            size_hint: 1, None
+            spacing: 10
+            padding: 20
+            height: 90
+            orientation: 'horizontal'
+
+            Label:
+                id: day_hour_label
+                size_hint: 0.5, 1
+                font_size: 16
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'left'
+                valign: 'middle'
+                text: 'Day hour: '
+
+            Spinner:
+                id: day_hour_spinner
+                font_size: 16
+                size_hint: 0.5, 1
+
+                values: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+
+        Label:
+            size_hint: 1, 1
+            text: ''
+
+
+#Specific information about weather in chosen city
+<SpecificWeatherScreen>
+    name: 'Specific weather'
+
+    BoxLayout:
+        cols: 1
+        rows: 2
+        size: root.width, root.height
+        orientation: 'vertical'
+        spacing: 10
+        padding: 10
+
+        canvas.before:
+            Color:
+                rgba:1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 50
+
+            Button:
+                size_hint: None, 1
+                width: 50
+                font_size: 24
+                text: '<='
+                on_press:
+                    app.root.transition.direction = 'right'
+                    app.root.current = 'City list'
+
+            Label:
+                size_hint: 0.05, 1
+                text: ''
+
+            Label:
+                id: specific_city_name
+                size_hint: 0.30, 1
+                font_size: 24
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'left'
+                valign: 'middle'
+                text: 'City'
+            Label:
+                size_hint: 0.35, 1
+                text: ''
+            Label:
+                id: specific_city_date
+                size_hint: 0.25, 1
+                font_size: 24
+                text_size: self.size
+                color: 0, 0, 0, 1
+                halign: 'right'
+                valign: 'middle'
+                text: 'Date'
+            Label:
+                size_hint: 0.025, 1
+                text: ''
+
+
+        TabbedPanel:
+            do_default_tab: False
+            size_hint: 1, 1
+            tab_width: (self.parent.width-25)/6
+            background_color: (1, 1, 1, 1)
+            border: [0, 0, 0, 0]
+            background_image: 'images/white_background.png'
+
+            TabbedPanelItem:
+                text: 'Temperature'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_temperature
+
+            TabbedPanelItem:
+                text: 'Wind'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_wind
+
+            TabbedPanelItem:
+                text: 'Precipitation'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_precipitation
+
+            TabbedPanelItem:
+                text: 'Humidity'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_humidity
+
+            TabbedPanelItem:
+                text: 'Cloudiness'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_cloudiness
+
+            TabbedPanelItem:
+                text: 'Pressure'
+
+                SpecificTabbedPanel:
+                    background_color: (1, 1, 1, 1)
+                    border: [0, 0, 0, 0]
+                    background_image: 'images/white_background.png'
+                    id: tp_pressure
